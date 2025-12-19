@@ -1,36 +1,16 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, Shield, Clock, AlertTriangle, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
 
 const PricingChoice = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [email, setEmail] = useState("");
 
-  const handleDownloadPDF = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-
-    toast({
-      title: "PDF Sent",
-      description: "Check your inbox for the compliance worksheet.",
-    });
-    setIsDialogOpen(false);
-    setEmail("");
+  const scrollToManual = () => {
+    document.getElementById("compliance-manual")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="py-20 border-t border-border">
+    <section id="the-shield" className="py-20 border-t border-border">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-foreground mb-3">
@@ -83,9 +63,9 @@ const PricingChoice = () => {
             <Button
               variant="outline"
               className="w-full border-border"
-              onClick={() => setIsDialogOpen(true)}
+              onClick={scrollToManual}
             >
-              Download PDF
+              View Manual Option
             </Button>
           </div>
 
@@ -141,33 +121,6 @@ const PricingChoice = () => {
             </Button>
           </div>
         </div>
-
-        {/* Email Capture Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="bg-card border-border">
-            <DialogHeader>
-              <DialogTitle className="text-foreground">
-                Download Compliance Worksheet
-              </DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleDownloadPDF} className="space-y-4 mt-4">
-              <p className="text-sm text-muted-foreground">
-                Enter your email to receive the official 40 CFR Part 84 manual worksheet.
-              </p>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-secondary border-border"
-                required
-              />
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                Send PDF to Email
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
       </div>
     </section>
   );

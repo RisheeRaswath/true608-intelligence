@@ -27,7 +27,7 @@ const RiskCalculator = () => {
   };
 
   return (
-    <section id="calculator" className="py-20 border-t border-border">
+    <section id="liability-audit" className="py-20 border-t border-border">
       <div className="container mx-auto px-4">
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-10">
