@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
   const scrollToCalculator = () => {
-    document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("liability-audit")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
