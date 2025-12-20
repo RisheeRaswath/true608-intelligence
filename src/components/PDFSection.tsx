@@ -10,44 +10,71 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase"; // <--- THE MISSING LINK
 
 const PDFSection = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleDownloadPDF = (e: React.FormEvent) => {
-    e.preventDefault(); // Stop the form from refreshing the page
+  const handleDownloadPDF = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!email) return;
 
-    // 1. Success Message
-    toast({
-      title: "Secure Protocol Sent",
-      description: "The official compliance worksheet is downloading...",
-    });
+    setIsLoading(true);
 
-    // 2. Close Modal
-    setIsDialogOpen(false);
-    setEmail("");
-    
-    // 3. TRIGGER THE DOWNLOAD (Only happens here)
-    const link = document.createElement("a");
-    link.href = "/blueprint.pdf";
-    link.download = "True608_Survival_Protocol_2026.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      // 1. THE HEIST: Send Email to Supabase Vault
+      const { error } = await supabase
+        .from('leads')
+        .insert([{ email: email }]);
+
+      if (error) throw error;
+
+      // 2. Success Feedback
+      toast({
+        title: "Protocol Initiated",
+        description: "Your email has been secured. Downloading blueprint...",
+      });
+
+      // 3. Trigger Download
+      const link = document.createElement("a");
+      link.href = "/blueprint.pdf";
+      link.download = "True608_Survival_Protocol_2026.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // 4. Clean Up
+      setIsDialogOpen(false);
+      setEmail("");
+      
+    } catch (error) {
+      console.error("Capture Failed:", error);
+      toast({
+        title: "Connection Error",
+        description: "Could not secure connection. Downloading anyway...",
+        variant: "destructive",
+      });
+      // Fallback: Download even if DB fails (Don't block the user)
+      const link = document.createElement("a");
+      link.href = "/blueprint.pdf";
+      link.download = "True608_Survival_Protocol_2026.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <section id="compliance-manual" className="py-24 bg-slate-950 border-y border-red-900/30 relative overflow-hidden">
-      {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-950/20 via-slate-950 to-slate-950 pointer-events-none" />
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
-          
-          {/* The "Trap" Card */}
           <div className="bg-slate-900/80 backdrop-blur-sm border border-red-800/50 rounded-2xl p-8 md:p-12 shadow-[0_0_50px_rgba(220,38,38,0.15)] text-center">
             
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/50 border border-red-500/30 text-red-400 font-mono text-sm mb-8">
@@ -70,7 +97,6 @@ const PDFSection = () => {
               </p>
             </div>
 
-            {/* --- THE FIX: This is JUST a button. No 'href', no '<a>' tag. --- */}
             <Button
               variant="default"
               size="lg"
@@ -88,7 +114,6 @@ const PDFSection = () => {
         </div>
       </div>
 
-      {/* Email Capture Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="bg-slate-900 border border-red-900/50 text-white sm:max-w-md">
           <DialogHeader>
@@ -110,10 +135,19 @@ const PDFSection = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600 focus:ring-red-500 focus:border-red-500"
                 required
+                disabled={isLoading}
               />
             </div>
-            <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-6">
-              Send PDF to Email <ArrowRight className="w-4 h-4 ml-2" />
+            <Button 
+              type="submit" 
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-6"
+              disabled={isLoading}
+            >
+              {isLoading ? "Securing Data..." : (
+                <>
+                  Send PDF to Email <ArrowRight className="w-4 h-4 ml-2" />
+                </>
+              )}
             </Button>
             <p className="text-[10px] text-slate-600 text-center">
               Your email is secure. We do not sell data to the EPA.
