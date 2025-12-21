@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Clock, FileText, ChevronRight, LogOut, ExternalLink } from "lucide-react";
+import { Shield, Clock, FileText, ChevronRight, LogOut, ExternalLink, Activity, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,6 +18,7 @@ const Dashboard = () => {
         navigate("/auth");
       } else {
         const email = session.user.email;
+        // Logic: Extract name from email for that personal 'Stark' touch
         setUserEmail(email?.split('@')[0].toUpperCase() || "TECHNICIAN");
         setLoading(false);
       }
@@ -33,110 +34,118 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#020617] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
-          <p className="text-slate-400 font-medium tracking-tight">Accessing Vault...</p>
+          <div className="w-10 h-10 border-2 border-slate-800 border-t-blue-500 rounded-full animate-spin"></div>
+          <p className="text-slate-500 font-mono text-[10px] uppercase tracking-[0.3em]">Syncing Vault...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans selection:bg-blue-100">
-      {/* High-Authority Top Navigation */}
-      <nav className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-blue-500/20">
+      {/* Official True608 Stealth Navigation */}
+      <nav className="border-b border-slate-900 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 bg-blue-600 rounded flex items-center justify-center text-[10px] font-bold text-white uppercase tracking-tighter">608</div>
-            <span className="font-bold tracking-tight text-lg text-slate-900">TRUE<span className="text-blue-600">608</span></span>
+            {/* Your Specific Blue Logo Style */}
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-[11px] font-black text-white shadow-lg shadow-blue-900/20">608</div>
+            <span className="font-bold tracking-tight text-xl text-white">TRUE<span className="text-blue-500">608</span></span>
           </div>
           <div className="flex items-center gap-6">
-            <span className="hidden md:block text-[11px] font-bold text-slate-400 uppercase tracking-widest border-r border-slate-200 pr-6">
-              Authenticated: {userEmail}
+            <span className="hidden md:block text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] border-r border-slate-800 pr-6">
+              ID: {userEmail}
             </span>
-            <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900 font-medium" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" /> Sign Out
+            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-slate-900" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" /> EXIT
             </Button>
           </div>
         </div>
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Welcome Header */}
+        {/* Personalized Header */}
         <div className="max-w-2xl mb-16">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
+          <div className="flex items-center gap-2 text-blue-500 mb-4">
+            <Activity className="w-4 h-4 animate-pulse" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.3em]">Intelligence Online</span>
+          </div>
+          <h1 className="text-5xl font-bold tracking-tight text-white mb-6">
             Welcome, {userEmail}.
           </h1>
-          <p className="text-lg text-slate-600 leading-relaxed">
-            Your firm is now registered for the 2026 HFC reporting cycle. 
-            The True608 Intelligence engine is currently calibrating for your specific inventory requirements.
+          <p className="text-lg text-slate-400 leading-relaxed font-light">
+            Your firm is provisioned for the <span className="text-white font-medium">2026 HFC reporting cycle</span>. 
+            Automated tracking is currently in final calibration for your inventory.
           </p>
         </div>
 
-        {/* The Priority Cards */}
+        {/* Tactical Info Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="group bg-white border border-slate-200 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300">
-            <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
-              <Shield className="w-5 h-5 text-blue-600 group-hover:text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-slate-900 underline decoration-blue-500/30">Priority-1 Queue Active</h3>
-            <p className="text-slate-500 leading-relaxed mb-6">
-              You are among the first firms authorized to use The Shield's automated compliance layer. 
-              Full system activation is scheduled for January 1st, 2026.
+          <div className="group bg-slate-900/30 border border-slate-800 p-8 rounded-2xl hover:border-blue-500/30 transition-all duration-500">
+            <Shield className="w-6 h-6 text-blue-500 mb-6" />
+            <h3 className="text-xl font-bold mb-3 text-white">Priority-1 Queue</h3>
+            <p className="text-slate-500 leading-relaxed mb-6 text-sm">
+              True608 has authorized your credentials for initial activation. 
+              Automated compliance kicks in <span className="text-blue-400 font-bold">January 1, 2026</span>.
             </p>
-            <div className="flex items-center text-sm font-bold text-blue-600 tracking-tight cursor-default uppercase">
-              Status: Verified <ChevronRight className="w-4 h-4 ml-1" />
-            </div>
+            <div className="text-[10px] font-black text-blue-500 tracking-[0.2em] uppercase">STATUS: VERIFIED</div>
           </div>
 
-          <div className="group bg-white border border-slate-200 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300">
-            <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-slate-900 transition-colors">
-              <Clock className="w-5 h-5 text-slate-600 group-hover:text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-slate-900 underline decoration-slate-500/30">The Roadmap</h3>
-            <p className="text-slate-500 leading-relaxed mb-6">
-              Our specialists are currently finalizing the 40 CFR Part 84 reporting logic. 
-              You will receive a sequence of briefings over the next 10 days to prepare your fleet.
+          <div className="group bg-slate-900/30 border border-slate-800 p-8 rounded-2xl hover:border-slate-700 transition-all duration-500">
+            <Clock className="w-6 h-6 text-slate-500 mb-6" />
+            <h3 className="text-xl font-bold mb-3 text-white">Operational Roadmap</h3>
+            <p className="text-slate-500 leading-relaxed mb-6 text-sm">
+              We are finalizing the 40 CFR Part 84 tracking logic. 
+              Expect technical briefings via email from <span className="text-slate-300">rishee@true608.com</span>.
             </p>
-            <div className="flex items-center text-sm font-bold text-slate-400 tracking-tight cursor-default uppercase">
-              Next Briefing: Dec 24 <ChevronRight className="w-4 h-4 ml-1" />
-            </div>
+            <div className="text-[10px] font-black text-slate-600 tracking-[0.2em] uppercase">PHASE: CALIBRATION</div>
           </div>
         </div>
 
-        {/* The Action/Hope Area */}
-        <div className="bg-slate-900 text-white rounded-3xl p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden relative shadow-2xl">
+        {/* The Action Vault */}
+        <div className="bg-gradient-to-br from-slate-900 to-black border border-slate-800 rounded-3xl p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[120px] rounded-full"></div>
+          
           <div className="relative z-10 max-w-lg">
-            <div className="inline-flex items-center gap-2 bg-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
-              Secure Transmission
-            </div>
-            <h2 className="text-3xl font-bold mb-6 tracking-tight">Prepare your 2026 Compliance Strategy.</h2>
+            <h2 className="text-3xl font-bold mb-6 tracking-tight text-white">Secure your 2026 Strategy.</h2>
             <p className="text-slate-400 leading-relaxed mb-8">
-              While the Shield engine initializes, ensure your technicians have reviewed the Manual Survival Protocol. 
-              This document outlines the liability risks you've already mitigated by joining True608.
+              The <span className="text-blue-400">Survival Blueprint</span> has been dispatched to your email. 
+              Use the button below to access your local copy immediately.
             </p>
             <Button 
-              className="bg-white text-slate-900 hover:bg-slate-100 px-8 py-6 h-auto font-bold rounded-xl flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 h-auto font-bold rounded-xl flex items-center gap-2"
               onClick={() => window.open('/blueprint.pdf', '_blank')}
             >
-              <FileText className="w-5 h-5" /> Download Survival Protocol
+              <FileText className="w-5 h-5" /> ACCESS SURVIVAL BLUEPRINT
             </Button>
           </div>
-          <div className="w-full md:w-1/3 aspect-square border border-slate-800 rounded-2xl flex items-center justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent"></div>
-            <div className="text-center">
-              <p className="text-slate-500 font-mono text-[10px] uppercase mb-2">Internal Encryption Key</p>
-              <p className="text-blue-500 font-mono text-xs">TRU-608-AUTH-SECURE</p>
+
+          <div className="w-full md:w-1/3 aspect-square border border-slate-800 bg-black/40 rounded-3xl flex items-center justify-center relative backdrop-blur-sm">
+            <div className="text-center p-6">
+              <p className="text-slate-600 font-mono text-[9px] uppercase tracking-widest mb-2">Encryption Hash</p>
+              <p className="text-blue-500 font-mono text-xs tracking-tighter break-all">TRUE608-SESSION-SECURED-{Math.random().toString(36).substring(7).toUpperCase()}</p>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 text-center">
-          <p className="text-slate-400 text-sm mb-6">Confidentiality Notice: Information on this dashboard is for authorized True608 Intelligence personnel only.</p>
-          <button className="text-xs font-bold text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors flex items-center justify-center mx-auto gap-2" onClick={() => window.location.href = 'mailto:hq@true608.com'}>
-            Technical Support <ExternalLink className="w-3 h-3" />
-          </button>
+        {/* Support Footer */}
+        <div className="mt-16 text-center border-t border-slate-900 pt-12">
+          <div className="inline-flex items-center gap-2 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800 mb-6">
+            <Mail className="w-3 h-3 text-blue-500" />
+            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Support: support@true608.com</span>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <button 
+              className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] hover:text-blue-500 transition-colors"
+              onClick={() => window.location.href = 'mailto:support@true608.com'}
+            >
+              CONTACT SUPPORT
+            </button>
+            <p className="text-[9px] text-slate-700 font-mono uppercase tracking-[0.1em]">
+              All communications are monitored for compliance quality.
+            </p>
+          </div>
         </div>
       </main>
     </div>
