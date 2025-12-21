@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Shield, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Shield, Mail, Lock, ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,15 +16,11 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // THE BIFROST REDIRECT: Watch for session changes and teleport user
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        navigate("/dashboard");
-      }
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+        console.log("Authentication event:", event);
         navigate("/dashboard");
       }
     });
@@ -38,51 +34,42 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        // PROTOCOL: Create Account
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
-          },
         });
 
-        if (error) {
-          if (error.message.includes("already registered")) {
+        if (error) throw error;
+
+        if (data.user && data.session) {
+            // If email confirmation is OFF, they go straight in
             toast({
-              title: "Account Exists",
-              description: "This email is already registered. Please sign in.",
-              variant: "destructive",
+              title: "IDENTITY VERIFIED",
+              description: "Access granted. Entering Command Center...",
             });
-          } else {
-            throw error;
-          }
+            navigate("/dashboard");
         } else {
-          toast({
-            title: "Account Created",
-            description: "You can now access the vault.",
-          });
+            // Fallback for verification
+            toast({
+              title: "PROTOCOL INITIATED",
+              description: "Check your email to verify your firm's credentials.",
+            });
         }
       } else {
+        // PROTOCOL: Access Vault (Login)
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
-        if (error) {
-          if (error.message.includes("Invalid login")) {
-            toast({
-              title: "Invalid Credentials",
-              description: "Please check your email and password.",
-              variant: "destructive",
-            });
-          } else {
-            throw error;
-          }
-        }
+        if (error) throw error;
+        
+        navigate("/dashboard");
       }
     } catch (error: any) {
       toast({
-        title: "Authentication Error",
+        title: "SECURITY ALERT",
         description: error.message,
         variant: "destructive",
       });
@@ -92,65 +79,63 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border">
+    <div className="min-h-screen bg-[#020617] flex flex-col font-sans selection:bg-red-500/30">
+      {/* High-Authority Header */}
+      <header className="border-b border-slate-800 bg-black/40 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate("/")}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-slate-400 hover:text-white hover:bg-slate-800/50"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+            RETURN TO HQ
           </Button>
         </div>
       </header>
 
-      {/* Auth Form */}
+      {/* Auth HUD */}
       <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm shadow-2xl shadow-black">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg mb-4">
-              <Shield className="w-6 h-6 text-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-red-600/10 border border-red-500/20 rounded-xl mb-4 shadow-inner">
+              <Shield className="w-7 h-7 text-red-500" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground mb-2">
-              {isSignUp ? "Create Secure Account" : "Access Vault"}
+            <h1 className="text-3xl font-black tracking-tighter text-white uppercase italic">
+              {isSignUp ? "Initialize" : "Authenticate"}
             </h1>
-            <p className="text-muted-foreground text-sm">
-              {isSignUp
-                ? "Start protecting your compliance records"
-                : "Enter your credentials to continue"}
+            <p className="text-slate-500 text-xs font-mono uppercase tracking-widest mt-2">
+              {isSignUp ? "Secure Firm Registration" : "Encrypted Vault Access"}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Email</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Personnel Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
                 <Input
                   type="email"
-                  placeholder="you@company.com"
+                  placeholder="name@firm.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-secondary border-border pl-10 h-11"
+                  className="bg-black/50 border-slate-800 focus:border-red-500/50 text-slate-200 pl-10 h-12 rounded-lg transition-all"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Password</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Access Cipher</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
                 <Input
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-secondary border-border pl-10 h-11"
+                  className="bg-black/50 border-slate-800 focus:border-red-500/50 text-slate-200 pl-10 h-12 rounded-lg transition-all"
                   required
                   minLength={6}
                 />
@@ -159,22 +144,26 @@ const Auth = () => {
 
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 h-11"
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-12 rounded-lg shadow-lg shadow-red-900/20 transition-all active:scale-95 flex items-center justify-center"
               disabled={loading}
             >
-              {loading ? "Processing..." : isSignUp ? "Create Account" : "Sign In"}
+              {loading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                isSignUp ? "CREATE SECURE ACCOUNT" : "UNLOCK VAULT"
+              )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center border-t border-slate-800 pt-6">
             <button
               type="button"
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-xs font-mono text-slate-500 hover:text-red-400 transition-colors uppercase tracking-tight"
             >
               {isSignUp
-                ? "Already have an account? Sign in"
-                : "Need an account? Sign up"}
+                ? "Already Registered? Switch to Secure Login"
+                : "New Firm? Initialize Compliance ID"}
             </button>
           </div>
         </div>
