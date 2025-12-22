@@ -83,7 +83,7 @@ const Dashboard = () => {
             <span className="text-[11px] font-black uppercase tracking-[0.4em]">Operational Status: Active</span>
           </div>
           <h1 className="text-6xl font-black tracking-tighter text-white uppercase leading-none mb-4">
-            COMMAND: {userEmail}
+           COMMAND: {userEmail}
           </h1>
           <p className="text-white/30 font-mono text-xs uppercase tracking-widest">Global Encryption Node: TRUE-608-INTEL-2026</p>
         </div>
@@ -146,7 +146,7 @@ const Dashboard = () => {
                   onClick={() => window.location.href = 'mailto:rishee@true608.com'}
                   className="text-[11px] text-white font-black uppercase underline decoration-2 underline-offset-8 hover:text-blue-600 transition-colors"
                 >
-                  RISHEE@TRUE608.COM
+                rishee@true608.com
                 </button>
               </div>
             </div>
@@ -161,7 +161,7 @@ const Dashboard = () => {
             </p>
             <Button 
               className="bg-blue-600 text-white hover:bg-blue-700 px-12 py-8 h-auto font-black rounded-none flex items-center gap-4 text-xl tracking-tighter transition-all active:scale-95 shadow-lg shadow-blue-600/20"
-              onClick={() => window.open('/blueprint.pdf', '_blank')}
+              onClick={() => window.open('/TRUE608_TIER2_PROTOCOL.pdf', '_blank')}
             >
               <FileText className="w-8 h-8" /> DOWNLOAD PROTOCOL
             </Button>
@@ -183,7 +183,7 @@ const Dashboard = () => {
               <span>Internal Security: 608-A</span>
               <span>Audit Grade: Gold</span>
             </div>
-            <a href="mailto:support@true608.com" className="text-blue-600 hover:text-white transition-colors underline decoration-2 underline-offset-8">SUPPORT@TRUE608.COM</a>
+            <a href="mailto:support@true608.com" className="text-blue-600 hover:text-white transition-colors underline decoration-2 underline-offset-8">support@true608.com</a>
           </div>
         </footer>
       </main>
