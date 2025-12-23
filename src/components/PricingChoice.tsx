@@ -1,6 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PricingSection = () => {
+  // COUNTDOWN LOGIC: The Doomsday Clock
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  useEffect(() => {
+    const targetDate = new Date('January 1, 2026 00:00:00').getTime();
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // LEAD CAPTURE LOGIC: Triggers a professional email inquiry
   const handleSecureSlot = (tierName: string) => {
     const subject = encodeURIComponent(`SECURE SLOT: ${tierName} for Jan 1st Mandate`);
@@ -36,7 +67,7 @@ const PricingSection = () => {
         'Multi-State Jurisdiction Mapping'
       ],
       cta: 'Reserve Fleet Slot',
-      highlight: true, // This is your primary debt-killing tier
+      highlight: true,
     },
     {
       name: 'Enterprise Mandate',
@@ -57,18 +88,28 @@ const PricingSection = () => {
   return (
     <section className="bg-slate-900 py-24 text-white font-sans">
       <div className="max-w-7xl mx-auto px-6 text-center">
-        {/* DOOMSDAY BANNER */}
-        <div className="inline-block bg-red-900/30 border border-red-500 rounded-full px-6 py-2 mb-8">
-          <p className="text-red-400 font-bold text-sm tracking-widest uppercase">
-            ⚠️ PHASE 1 PRICE LOCKDOWN: EXPIRING IN 192 HOURS
+        
+        {/* LIVE DOOMSDAY BANNER */}
+        <div className="inline-block bg-red-900/20 border border-red-500/50 rounded-2xl px-8 py-4 mb-12 shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+          <p className="text-red-500 font-black text-xs tracking-widest uppercase mb-2">
+            ⚠️ PHASE 1 PRICE LOCKDOWN EXPIRING IN:
           </p>
+          <div className="flex gap-4 justify-center items-center font-mono text-3xl md:text-4xl font-black text-white">
+            <div>{timeLeft.days}<span className="text-xs text-red-500 block uppercase font-bold">Days</span></div>
+            <div className="pb-4">:</div>
+            <div>{timeLeft.hours}<span className="text-xs text-red-500 block uppercase font-bold">Hrs</span></div>
+            <div className="pb-4">:</div>
+            <div>{timeLeft.minutes}<span className="text-xs text-red-500 block uppercase font-bold">Min</span></div>
+            <div className="pb-4">:</div>
+            <div className="text-red-500">{timeLeft.seconds}<span className="text-xs text-red-500 block uppercase font-bold font-sans">Sec</span></div>
+          </div>
         </div>
 
         <h2 className="text-5xl font-extrabold mb-4 text-blue-400 tracking-tight">
           FEDERAL COMPLIANCE PRICING
         </h2>
         <p className="text-xl mb-16 text-slate-300 max-w-2xl mx-auto">
-          Secure your HFC allocation tracking before the <span className="text-white font-bold">Jan 01, 2026</span> mandate. All licenses include the full True608 HUD.
+          Secure your HFC allocation tracking before the <span className="text-white font-bold underline decoration-blue-500">Jan 01, 2026</span> mandate.
         </p>
         
         <div className="grid md:grid-cols-3 gap-8 items-center">
@@ -118,14 +159,13 @@ const PricingSection = () => {
           ))}
         </div>
 
-        {/* COMPLIANCE FOOTER */}
         <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-slate-500 text-sm italic">
             * All pricing in USD. Payments processed via Secure US ACH or Domestic Wire only.
           </p>
           <div className="flex gap-4">
-            <span className="bg-slate-800 px-3 py-1 rounded text-[10px] text-slate-400 font-mono">EPA 40 CFR 84 COMPLIANT</span>
-            <span className="bg-slate-800 px-3 py-1 rounded text-[10px] text-slate-400 font-mono">ENCRYPTED DATA LOGGING</span>
+            <span className="bg-slate-800 px-3 py-1 rounded text-[10px] text-slate-400 font-mono tracking-tighter">EPA 40 CFR 84 COMPLIANT</span>
+            <span className="bg-slate-800 px-3 py-1 rounded text-[10px] text-slate-400 font-mono tracking-tighter">ENCRYPTED DATA LOGGING</span>
           </div>
         </div>
       </div>
