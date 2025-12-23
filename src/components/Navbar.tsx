@@ -12,11 +12,9 @@ const Navbar = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
-    // We search for the element
     const element = document.getElementById(sectionId);
     if (element) {
-      // Logic: Scroll to the section but leave an offset for the sticky Navbar
-      const offset = 80; // Height of your navbar
+      const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -35,7 +33,6 @@ const Navbar = () => {
     <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-2">
         
-        {/* --- LOGO AREA --- */}
         <Link 
           to="/" 
           onClick={handleLogoClick}
@@ -51,13 +48,12 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* --- ACTIONS AREA --- */}
         <div className="flex items-center gap-2 sm:gap-6">
           <nav className="hidden md:flex items-center gap-6 mr-4">
-            <button onClick={() => scrollToSection("liability-audit")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Liability Audit</button>
-            <button onClick={() => scrollToSection("compliance-manual")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Manual</button>
-            {/* THIS IS THE TARGET: id must be 'the-shield' */}
-            <button onClick={() => scrollToSection("the-shield")} className="text-sm font-bold text-blue-500 hover:text-blue-400 transition-colors uppercase tracking-widest">The Shield</button>
+            <button onClick={() => scrollToSection("liability-audit")} className="text-sm font-medium text-muted-foreground hover:text-foreground">Liability Audit</button>
+            <button onClick={() => scrollToSection("compliance-manual")} className="text-sm font-medium text-muted-foreground hover:text-foreground">Manual</button>
+            {/* CORRECTED: Matches standard color and font weight */}
+            <button onClick={() => scrollToSection("the-shield")} className="text-sm font-medium text-muted-foreground hover:text-foreground">The Shield</button>
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
