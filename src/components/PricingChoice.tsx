@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const PricingSection = () => {
-  // COUNTDOWN LOGIC: The Jan 01, 2026 Doomsday Clock
+  // COUNTDOWN LOGIC
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -32,7 +32,7 @@ const PricingSection = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // LEAD CAPTURE: Direct link to your Zoho inbox
+  // LEAD CAPTURE
   const handleSecureSlot = (tierName: string) => {
     const subject = encodeURIComponent(`SECURE SLOT: ${tierName} for Jan 1st Mandate`);
     const body = encodeURIComponent(
@@ -41,7 +41,6 @@ const PricingSection = () => {
     window.location.href = `mailto:rishee@true608.com?subject=${subject}&body=${body}`;
   };
 
-  // WEAPONIZED TIERS: Updated for maximum psychological impact
   const tiers = [
     {
       name: 'Standard Shield',
@@ -51,7 +50,7 @@ const PricingSection = () => {
         'Automated 40 CFR 84 Logging',
         'EPA Audit-Ready Reports',
         'Real-time HFC Tracking',
-        'Federal Audit Defense Support' // Upgraded from "Email Support"
+        'Federal Audit Defense Support'
       ],
       cta: 'Secure Shield',
       highlight: false,
@@ -63,7 +62,7 @@ const PricingSection = () => {
       features: [
         'Bulk Serialization Engine',
         'Technician Compliance HUD',
-        'Fleet-Wide Liability Lockdown', // Upgraded
+        'Fleet-Wide Liability Lockdown',
         'Multi-State Jurisdiction Mapping'
       ],
       cta: 'Reserve Fleet Slot',
@@ -77,7 +76,7 @@ const PricingSection = () => {
         'Custom API Integrations',
         'Dedicated Compliance Officer',
         'On-site Implementation Guide',
-        'Indemnity Data Vault (10yr)' // Upgraded
+        'Indemnity Data Vault (10yr)'
       ],
       cta: 'Initialize Strike',
       highlight: false,
@@ -85,72 +84,71 @@ const PricingSection = () => {
   ];
 
   return (
-    // ID MATCHES NAVBAR | scroll-mt-20 ACCOUNTS FOR STICKY HEADER
-    <section id="the-shield" className="bg-black py-12 text-white font-sans scroll-mt-20">
+    <section id="the-shield" className="bg-black py-20 text-white font-sans scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 text-center">
         
-        {/* COMPACT TIMER BANNER */}
-        <div className="inline-block bg-red-950/20 border border-red-500/30 rounded-xl px-6 py-2 mb-8 shadow-[0_0_20px_rgba(239,68,68,0.1)]">
-          <p className="text-red-500 font-black text-[10px] tracking-widest uppercase mb-1">
+        {/* DOOMSDAY BANNER - UPSCALED */}
+        <div className="inline-block bg-red-950/20 border border-red-500/40 rounded-2xl px-10 py-5 mb-12 shadow-[0_0_40px_rgba(239,68,68,0.15)]">
+          <p className="text-red-500 font-black text-sm tracking-[0.2em] uppercase mb-2">
             ⚠️ PHASE 1 PRICE LOCKDOWN EXPIRING IN:
           </p>
-          <div className="flex gap-4 justify-center items-center font-mono text-2xl md:text-3xl font-black text-white">
-            <div>{timeLeft.days}<span className="text-[8px] text-red-500 block uppercase font-bold font-sans">Days</span></div>
-            <div className="pb-4 text-zinc-700">:</div>
-            <div>{timeLeft.hours}<span className="text-[8px] text-red-500 block uppercase font-bold font-sans">Hrs</span></div>
-            <div className="pb-4 text-zinc-700">:</div>
-            <div>{timeLeft.minutes}<span className="text-[8px] text-red-500 block uppercase font-bold font-sans">Min</span></div>
-            <div className="pb-4 text-zinc-700">:</div>
-            <div>{timeLeft.seconds}<span className="text-[8px] text-red-500 block uppercase font-bold font-sans">Sec</span></div>
+          <div className="flex gap-6 justify-center items-center font-mono text-4xl md:text-5xl font-black text-white">
+            <div>{timeLeft.days}<span className="text-[10px] text-red-500 block uppercase font-bold font-sans mt-1">Days</span></div>
+            <div className="pb-6 text-zinc-700">:</div>
+            <div>{timeLeft.hours}<span className="text-[10px] text-red-500 block uppercase font-bold font-sans mt-1">Hrs</span></div>
+            <div className="pb-6 text-zinc-700">:</div>
+            <div>{timeLeft.minutes}<span className="text-[10px] text-red-500 block uppercase font-bold font-sans mt-1">Min</span></div>
+            <div className="pb-6 text-zinc-700">:</div>
+            <div>{timeLeft.seconds}<span className="text-[10px] text-red-500 block uppercase font-bold font-sans mt-1">Sec</span></div>
           </div>
         </div>
 
-        <h2 className="text-3xl font-extrabold mb-2 text-blue-500 tracking-tight uppercase">
+        <h2 className="text-5xl md:text-6xl font-extrabold mb-6 text-blue-500 tracking-tight uppercase">
           Federal Compliance
         </h2>
-        <p className="text-sm mb-10 text-zinc-500 max-w-2xl mx-auto">
-          Secure HFC allocation tracking before the <span className="text-white font-bold underline decoration-blue-500">Jan 01, 2026</span> mandate.
+        <p className="text-xl md:text-2xl mb-16 text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+          Secure HFC allocation tracking before the <span className="text-white font-bold underline underline-offset-8 decoration-blue-500">Jan 01, 2026</span> mandate.
         </p>
         
-        {/* PRICING GRID */}
-        <div className="grid md:grid-cols-3 gap-6 items-stretch">
+        {/* PRICING GRID - UPSCALED CARDS */}
+        <div className="grid lg:grid-cols-3 gap-8 items-stretch">
           {tiers.map((tier) => (
             <div 
               key={tier.name}
-              className={`flex flex-col relative p-6 rounded-2xl border transition-all duration-300 ${
+              className={`flex flex-col relative p-8 md:p-10 rounded-[2rem] border-2 transition-all duration-300 ${
                 tier.highlight 
-                ? 'border-blue-500 bg-zinc-900 scale-105 shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)] z-10' 
+                ? 'border-blue-500 bg-zinc-900 scale-105 shadow-[0_0_60px_-15px_rgba(59,130,246,0.3)] z-10' 
                 : 'border-zinc-800 bg-black'
               }`}
             >
               {tier.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                  Recommended
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-6 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg">
+                  Most Recommended
                 </div>
               )}
 
-              <h3 className="text-lg font-bold mb-1 uppercase tracking-tight">{tier.name}</h3>
-              <p className="text-zinc-500 text-[10px] mb-4 min-h-[32px]">{tier.description}</p>
+              <h3 className="text-2xl font-bold mb-3 uppercase tracking-tight text-white">{tier.name}</h3>
+              <p className="text-zinc-400 text-sm md:text-base mb-8 min-h-[48px] leading-relaxed font-medium">{tier.description}</p>
               
-              <div className="text-5xl font-black mb-6">
-                <span className="text-xl align-top text-zinc-600">$</span>
+              <div className="text-6xl md:text-7xl font-black mb-10 text-white">
+                <span className="text-3xl align-top text-zinc-500 mr-1">$</span>
                 {tier.price}
-                <span className="text-xs font-medium text-zinc-600">/yr</span>
+                <span className="text-lg font-bold text-zinc-500 tracking-normal">/yr</span>
               </div>
 
-              <ul className="text-left mb-8 space-y-3 flex-grow">
+              <ul className="text-left mb-10 space-y-5 flex-grow">
                 {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start text-[11px] text-zinc-300 leading-snug">
-                    <span className="text-blue-500 mr-2 font-bold shrink-0">✓</span> {feature}
+                  <li key={feature} className="flex items-start text-base text-zinc-200 font-medium">
+                    <span className="text-blue-500 mr-3 mt-1 font-black text-xl">✓</span> {feature}
                   </li>
                 ))}
               </ul>
 
               <button 
                 onClick={() => handleSecureSlot(tier.name)}
-                className={`w-full py-3 rounded-xl font-black text-xs uppercase transition-all duration-200 active:scale-95 mt-auto ${
+                className={`w-full py-5 rounded-2xl font-black text-lg uppercase tracking-wider transition-all duration-200 active:scale-95 mt-auto shadow-xl ${
                   tier.highlight 
-                  ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg' 
+                  ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/30' 
                   : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100'
                 }`}
               >
@@ -160,14 +158,14 @@ const PricingSection = () => {
           ))}
         </div>
 
-        {/* FOOTER */}
-        <div className="mt-12 pt-6 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-zinc-600 text-[10px] italic">
-            * All pricing in USD. Payment via Secure US ACH or Domestic Wire.
+        {/* FOOTER - UPSCALED */}
+        <div className="mt-20 pt-10 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-zinc-500 text-xs md:text-sm italic font-medium">
+            * All pricing in USD. Payment via Secure US ACH or Domestic Wire only.
           </p>
-          <div className="flex gap-3">
-            <span className="bg-zinc-900 px-2 py-1 rounded text-[8px] text-zinc-500 font-mono tracking-tighter">EPA 40 CFR 84 COMPLIANT</span>
-            <span className="bg-zinc-900 px-2 py-1 rounded text-[8px] text-zinc-500 font-mono tracking-tighter">AES-256 DATA LOGGING</span>
+          <div className="flex gap-4">
+            <span className="bg-zinc-900 px-4 py-2 rounded-lg text-[10px] md:text-xs text-zinc-400 font-bold font-mono tracking-wider border border-zinc-800">EPA 40 CFR 84 COMPLIANT</span>
+            <span className="bg-zinc-900 px-4 py-2 rounded-lg text-[10px] md:text-xs text-zinc-400 font-bold font-mono tracking-wider border border-zinc-800">AES-256 DATA LOGGING</span>
           </div>
         </div>
       </div>
