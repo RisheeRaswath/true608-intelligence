@@ -1,9 +1,15 @@
-import { LogOut, Activity } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const Navbar = ({ userEmail, handleLogout }: { userEmail: string | null, handleLogout: () => void }) => {
+// 1. THE BYPASS: We add '?' to make these props optional
+interface NavbarProps {
+  userEmail?: string | null;
+  handleLogout?: () => void;
+}
+
+// 2. THE DEFAULT VALUES: If no data comes in, we assume "Guest Mode"
+const Navbar = ({ userEmail = null, handleLogout = () => {} }: NavbarProps) => {
   
-  // THE TARGETING COMPUTER: Smooth Scroll Logic
   const scrollToPricing = () => {
     const element = document.getElementById('investment-tiers');
     if (element) {
@@ -17,7 +23,6 @@ const Navbar = ({ userEmail, handleLogout }: { userEmail: string | null, handleL
         <img src="/logo.png" alt="TRUE608" className="h-7 w-auto object-contain" />
         
         <div className="flex items-center gap-8">
-          {/* THE PRIMARY NAV STRIKE */}
           <button 
             onClick={scrollToPricing}
             className="hidden md:block text-[10px] font-mono text-white/40 hover:text-blue-600 uppercase tracking-[0.3em] transition-all cursor-pointer font-black"
@@ -25,20 +30,28 @@ const Navbar = ({ userEmail, handleLogout }: { userEmail: string | null, handleL
             INVESTMENT TIERS
           </button>
 
+          {/* LOGIC: Only show Access ID if a user actually exists */}
           <span className="hidden lg:block text-[10px] font-mono text-white/20 uppercase tracking-[0.3em]">
-            ACCESS ID: {userEmail || "GUEST"}@608.SECURE
+            ACCESS ID: {userEmail ? `${userEmail}@608.SECURE` : "GUEST.NODE"}
           </span>
           
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-white/40 hover:text-white hover:bg-blue-600/20 font-bold tracking-tighter" 
-            onClick={handleLogout}
-          >
-            <LogOut className="w-4 h-4 mr-2" /> TERMINATE
-          </Button>
+          {/* LOGIC: Only show Logout if a user exists. Otherwise show Login? 
+              For now, we keep it simple to fix the build. */}
+          {userEmail && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              // 3. THE CSS FIX: Removed 'hover:text-white' to stop the conflict. Kept Blue.
+              className="text-white/40 hover:text-blue-600 hover:bg-blue-600/20 font-bold tracking-tighter" 
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4 mr-2" /> TERMINATE
+            </Button>
+          )}
         </div>
       </div>
     </nav>
   );
 };
+
+export default Navbar;
