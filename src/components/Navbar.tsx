@@ -12,9 +12,20 @@ const Navbar = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
+    // We search for the element
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Logic: Scroll to the section but leave an offset for the sticky Navbar
+      const offset = 80; // Height of your navbar
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
     } else if (location.pathname !== "/") {
       window.location.href = `/#${sectionId}`;
     }
@@ -43,9 +54,10 @@ const Navbar = () => {
         {/* --- ACTIONS AREA --- */}
         <div className="flex items-center gap-2 sm:gap-6">
           <nav className="hidden md:flex items-center gap-6 mr-4">
-            <button onClick={() => scrollToSection("liability-audit")} className="text-sm font-medium text-muted-foreground hover:text-foreground">Liability Audit</button>
-            <button onClick={() => scrollToSection("compliance-manual")} className="text-sm font-medium text-muted-foreground hover:text-foreground">Manual</button>
-            <button onClick={() => scrollToSection("the-shield")} className="text-sm font-medium text-muted-foreground hover:text-foreground">The Shield</button>
+            <button onClick={() => scrollToSection("liability-audit")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Liability Audit</button>
+            <button onClick={() => scrollToSection("compliance-manual")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Manual</button>
+            {/* THIS IS THE TARGET: id must be 'the-shield' */}
+            <button onClick={() => scrollToSection("the-shield")} className="text-sm font-bold text-blue-500 hover:text-blue-400 transition-colors uppercase tracking-widest">The Shield</button>
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
