@@ -11,11 +11,10 @@ const Navbar = () => {
     }
   };
 
-  // THE TARGETING COMPUTER (Preserved your superior offset logic)
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Keeps the title visible below the sticky header
+      const offset = 80; 
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -26,7 +25,6 @@ const Navbar = () => {
         behavior: "smooth"
       });
     } else if (location.pathname !== "/") {
-      // If they are on the Login page, this sends them Home -> Pricing
       window.location.href = `/#${sectionId}`;
     }
   };
@@ -35,7 +33,6 @@ const Navbar = () => {
     <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-2">
         
-        {/* BRAND IDENTITY */}
         <Link 
           to="/" 
           onClick={handleLogoClick}
@@ -51,16 +48,10 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* NAVIGATION HUD */}
         <div className="flex items-center gap-2 sm:gap-6">
           <nav className="hidden md:flex items-center gap-6 mr-4">
-            
-            {/* EXISTING LINKS */}
             <button onClick={() => scrollToSection("liability-audit")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Liability Audit</button>
             <button onClick={() => scrollToSection("compliance-manual")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Manual</button>
-            
-            {/* NEW TARGETING LINK: INVESTMENT TIERS */}
-            {/* This connects directly to the Pricing Section ID we set earlier */}
             <button 
               onClick={() => scrollToSection("investment-tiers")} 
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -69,7 +60,6 @@ const Navbar = () => {
             </button>
           </nav>
 
-          {/* AUTHENTICATION GATES */}
           <div className="flex items-center gap-1.5 sm:gap-3">
             <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground px-2 sm:px-3 text-xs sm:text-sm">
               <Link to="/auth">
