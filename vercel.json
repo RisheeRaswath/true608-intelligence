@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/app/assets/(.*)",
-      "destination": "/app/assets/$1"
+      "source": "/app/assets/:path*",
+      "destination": "/app/assets/:path*"
     },
     {
-      "source": "/app/(.*)",
+      "source": "/app/:path*",
       "destination": "/app/index.html"
     }
   ]
