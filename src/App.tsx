@@ -2,9 +2,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom"; // Changed to HashRouter
 import Index from "./pages/Index";
-import Auth from "./pages/Auth"; // This is your Login component
+import Auth from "./pages/Auth"; 
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -15,20 +15,21 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      
-      {/* basename="/app" ensures the scanner knows its new home */}
-      <BrowserRouter>
+      <HashRouter> {/* Changed to HashRouter */}
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-    
-          {/* THE NUCLEAR IGNORE: Add this line ABOVE the '*' route */}
-          <Route path="/app/*" element={null} /> 
-    
+          {/* true608.com/#/ -> Marketing Page */}
+          <Route path="/" element={<Index />} /> 
+          
+          {/* true608.com/#/app -> Orange Login Page */}
+          <Route path="/app" element={<Auth />} /> 
+          
+          {/* true608.com/#/app/dashboard -> The Asset */}
+          <Route path="/app/dashboard" element={<Dashboard />} />
+          
+          {/* Fallback */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

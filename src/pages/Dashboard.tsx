@@ -1,214 +1,147 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Clock, FileText, LogOut, Activity, Mail, Binary, ShieldAlert, CheckCircle2, Lock } from "lucide-react";
+import { Shield, LogOut, Activity, Wrench, Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import FieldShield from "@/components/FieldShield";
+import ControlTower from "@/components/ControlTower";
+
+type ViewMode = "tower" | "field";
 
 const Dashboard = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<ViewMode>("tower");
   const { toast } = useToast();
-
-  const getDynamicDate = (daysToAdd: number) => {
-    const date = new Date();
-    date.setDate(date.getDate() + daysToAdd);
-    return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
-  };
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (!session) {
-        navigate("/auth");
+        // Weld users back to the orange Auth gate if no session
+        window.location.replace("/#/app");
       } else {
-        const email = session.user.email;
-        setUserEmail(email?.split('@')[0].toUpperCase() || "TECHNICIAN");
+        setUserEmail(session.user.email?.split("@")[0].toUpperCase() || "OPERATOR");
         setLoading(false);
       }
     };
+
     checkUser();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast({ title: "TERMINATED", description: "Secure session ended." });
-    navigate("/");
-  };
-
-  const handleDownloadProtocol = () => {
-    // THE SURGICAL STRIKE: Filename must be 100% identical to the file in your public folder
-    const link = document.createElement('a');
-    link.href = '/TRUE608_SURVIVAL_PROTOCOL.pdf'; 
-    link.target = '_blank';
-    link.download = 'TRUE608_SURVIVAL_PROTOCOL.pdf'; 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast({
-      title: "ENCRYPTION BYPASSED",
-      description: "Survival Protocol is now downloading to your local drive.",
-    });
+    window.location.replace("/#/");
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-white/5 border-t-blue-600 rounded-full animate-spin"></div>
-          <p className="text-blue-500 font-mono text-xs uppercase tracking-[0.4em] font-black">Initializing HUD</p>
-        </div>
-      </div>
-    );
+    return <div className="min-h-screen bg-[#F97316] selection:bg-black/20" />;
   }
 
-  const roadmapSteps = [
-    { date: "TODAY", title: "FIRM PROVISIONING", desc: "Identity verified. Vault allocated. Encryption hash generated.", status: "complete" },
-    { date: getDynamicDate(2), title: "PAYLOAD DELIVERY", desc: "Digital transmission of the 40 CFR Part 84 Survival Protocol.", status: "pending" },
-    { date: getDynamicDate(4), title: "ENGINE CALIBRATION", desc: "HFC Allowance sync and technician seat allocation.", status: "pending" },
-    { date: "JAN 01", title: "SHIELD ACTIVATION", desc: "1-Click Federal Reporting and Audit Protection goes live.", status: "pending" },
-  ];
-
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-600/30">
-      {/* NAVIGATION HUD */}
-      <nav className="border-b border-white/10 bg-black sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <img src="/logo.png" alt="TRUE608" className="h-7 w-auto object-contain" />
-          <div className="flex items-center gap-8">
-            <span className="hidden md:block text-[10px] font-mono text-white/30 uppercase tracking-[0.3em]">
-              ACCESS ID: {userEmail}@608.SECURE
-            </span>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-white/40 hover:text-white hover:bg-blue-600/20 active:bg-blue-600/40 font-bold tracking-tighter transition-all" 
-              onClick={handleLogout}
-            >
-              <LogOut className="w-4 h-4 mr-2" /> TERMINATE SESSION
-            </Button>
+    <div className="min-h-screen bg-[#F97316] text-black font-sans selection:bg-black/20">
+      {/* ORANGE REALM NAVIGATION */}
+      <nav className="border-b border-black/20 bg-[#F97316]/95 backdrop-blur-sm p-4 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="p-2 border border-black/40 bg-black/10">
+            <Shield className="w-5 h-5" />
           </div>
+          <div>
+            <p className="text-[11px] font-black tracking-[0.3em] uppercase">True608 Tactical Vault</p>
+            <h1 className="text-xl font-black tracking-tight uppercase">
+              OPERATOR: <span className="underline decoration-black/60">{userEmail}</span>
+            </h1>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === "tower" ? "default" : "outline"}
+            size="sm"
+            className="rounded-none border-black/40 bg-black text-[#F97316] hover:bg-black/90"
+            onClick={() => setViewMode("tower")}
+          >
+            <Radar className="w-4 h-4 mr-1" />
+            CONTROL TOWER
+          </Button>
+          <Button
+            variant={viewMode === "field" ? "default" : "outline"}
+            size="sm"
+            className="rounded-none border-black/40 bg-black text-[#F97316] hover:bg-black/90"
+            onClick={() => setViewMode("field")}
+          >
+            <Wrench className="w-4 h-4 mr-1" />
+            FIELD-SHIELD
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            className="ml-2 text-black hover:text-black hover:bg-black/10 rounded-none font-bold tracking-widest text-[10px]"
+          >
+            <LogOut className="w-4 h-4 mr-2" /> EXIT VAULT
+          </Button>
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-6 py-12">
-        {/* COMMANDER GREETING */}
-        <div className="mb-16 border-l-8 border-blue-600 pl-8">
-          <div className="flex items-center gap-2 text-blue-500 mb-3">
-            <Activity className="w-4 h-4" />
-            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Operational Status: Active</span>
-          </div>
-          <h1 className="text-6xl font-black tracking-tighter text-white uppercase leading-none mb-4">
-           COMMAND: {userEmail}
-          </h1>
-          <p className="text-white/30 font-mono text-xs uppercase tracking-widest">Global Encryption Node: TRUE-608-INTEL-2026</p>
-        </div>
-
-        {/* TACTICAL METRICS */}
-        <div className="grid md:grid-cols-4 gap-4 mb-16">
-          {[
-            { label: "FEDERAL RISK", val: "$44,539", sub: "DAILY LIABILITY", icon: ShieldAlert, color: "text-red-600" },
-            { label: "ENCRYPTION", val: "AES-256", sub: "MILITARY GRADE", icon: Binary, color: "text-blue-600" },
-            { label: "ALLOWANCE", val: "LOCKED", sub: "PRIORITY-1 QUEUE", icon: Lock, color: "text-white/20" },
-            { label: "HUD VERSION", val: "1.0.9", sub: "SECURE KERNEL", icon: Activity, color: "text-green-600" },
-          ].map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <div key={i} className="bg-white/[0.03] border border-white/10 p-6 rounded-none group hover:border-blue-600/50 transition-all">
-                <Icon className={`w-5 h-5 ${item.color} mb-6`} />
-                <p className="text-[10px] font-black text-white/40 uppercase mb-1 tracking-widest">{item.label}</p>
-                <p className="text-3xl font-black text-white tracking-tighter uppercase">{item.val}</p>
-                <p className="text-[9px] text-white/20 font-mono mt-1 font-bold">{item.sub}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {/* OPERATION ROADMAP */}
-          <div className="md:col-span-2 bg-white/[0.02] border border-white/10 p-10">
-            <h2 className="text-2xl font-black mb-12 flex items-center gap-3 uppercase tracking-tighter border-b border-white/5 pb-6">
-              <Clock className="w-6 h-6 text-blue-600" /> OPERATION ROADMAP
-            </h2>
-            <div className="space-y-12 relative">
-              <div className="absolute left-[11px] top-2 bottom-2 w-[1px] bg-white/10"></div>
-              {roadmapSteps.map((step, i) => (
-                <div key={i} className="flex gap-10 relative z-10">
-                  <div className={`w-6 h-6 rounded-none border-2 flex items-center justify-center bg-black transition-all ${step.status === 'complete' ? 'border-blue-600 bg-blue-600' : 'border-white/10'}`}>
-                    {step.status === 'complete' && <CheckCircle2 className="w-3 h-3 text-white" />}
-                  </div>
+      {/* ORANGE REALM BODY */}
+      <main className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-10 space-y-6">
+        <div className="grid md:grid-cols-3 gap-6 items-stretch">
+          <div className="md:col-span-2">
+            {viewMode === "tower" ? (
+              <div className="bg-black text-[#F97316] border border-black/40 p-6 md:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                <div className="flex items-center justify-between mb-6">
                   <div>
-                    <p className={`text-[11px] font-black font-mono tracking-[0.3em] ${step.status === 'complete' ? 'text-blue-600' : 'text-white/20'}`}>{step.date}</p>
-                    <h4 className={`text-xl font-black mt-1 uppercase ${step.status === 'complete' ? 'text-white' : 'text-white/40'}`}>{step.title}</h4>
-                    <p className="text-sm text-white/30 mt-2 max-w-lg leading-relaxed font-bold uppercase tracking-tight">{step.desc}</p>
+                    <p className="text-[10px] font-black tracking-[0.4em] uppercase text-[#F97316]/70">
+                      CONTROL TOWER ONLINE
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase">
+                      FEDERAL COMPLIANCE STACK
+                    </h2>
                   </div>
+                  <Activity className="w-10 h-10 text-[#F97316] animate-pulse" />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* FOUNDER CONTACT */}
-          <div className="flex flex-col gap-6">
-            <div className="bg-white/[0.02] border border-white/10 p-8 flex flex-col justify-between border-t-8 border-blue-600 shadow-2xl">
-              <div>
-                <Shield className="w-10 h-10 text-blue-600 mb-8" />
-                <h3 className="text-3xl font-black text-white mb-4 uppercase leading-none text-balance">QUEUE CONFIRMED</h3>
-                <p className="text-white/50 text-sm font-bold uppercase tracking-tight">
-                  YOUR FIRM IS LOCKED FOR THE JAN 1ST ACTIVATION CYCLE. PUBLIC WAITING LIST BYPASSED.
+                {/* Inject the full ControlTower intelligence view */}
+                <ControlTower
+                  onEnterFieldMode={() => setViewMode("field")}
+                />
+              </div>
+            ) : (
+              <div className="bg-black text-[#F97316] border border-black/40 p-4 md:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                <p className="text-[10px] font-black tracking-[0.4em] uppercase text-[#F97316]/70 mb-3">
+                  FIELD MODE: ACTIVE
                 </p>
+                {/* Deploy the FieldShield scanner HUD */}
+                <FieldShield onBack={() => setViewMode("tower")} />
               </div>
-              <div className="mt-12 pt-8 border-t border-white/10">
-                <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest mb-4">PRIMARY CONTACT</p>
-                <p className="text-xl font-black text-white uppercase">RISHEE</p>
-                <p className="text-[11px] text-blue-600 font-bold uppercase tracking-widest mb-6">FOUNDER | COMPLIANCE LEAD</p>
-                <button 
-                  onClick={() => window.location.href = 'mailto:rishee@true608.com'}
-                  className="text-[11px] text-white font-black uppercase underline decoration-2 underline-offset-8 hover:text-blue-600 transition-colors"
-                >
-                rishee@true608.com
-                </button>
-              </div>
-            </div>
+            )}
           </div>
-        </div>
 
-        {/* THE SURVIVAL PROTOCOL DOWNLOAD SECTION (FIXED) */}
-        <div className="bg-white/[0.03] border border-white/10 p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden group hover:border-blue-600/50 transition-all">
-          <div className="relative z-10 max-w-xl">
-            <h2 className="text-5xl font-black mb-6 tracking-tighter uppercase leading-[0.9] text-white">ACCESS THE SURVIVAL PROTOCOL.</h2>
-            <p className="text-white/40 font-bold uppercase text-sm mb-10 tracking-tight max-w-md">
-              THIS IS YOUR TACTICAL MANUAL FOR MANAGING REFRIGERANT LIABILITIES UNTIL THE SHIELD ACTIVATES ON JAN 01.
-            </p>
-            <Button 
-              className="bg-blue-600 text-white hover:bg-blue-700 px-12 py-8 h-auto font-black rounded-none flex items-center gap-4 text-xl tracking-tighter transition-all active:scale-95 shadow-lg shadow-blue-600/20"
-              onClick={handleDownloadProtocol}
-            >
-              <FileText className="w-8 h-8" /> DOWNLOAD PROTOCOL
-            </Button>
-          </div>
-          
-          <div className="hidden lg:flex w-72 h-72 border-[16px] border-white/5 items-center justify-center bg-black">
-              <div className="text-center">
-                <p className="text-[10px] font-mono text-zinc-400 uppercase mb-2 font-bold tracking-[0.4em]">SESSION HASH</p>
-                <p className="text-blue-600 font-mono text-xs font-black uppercase tracking-tighter px-4 break-all">
-                  TRU-{Math.random().toString(36).substring(7).toUpperCase()}
-                </p>
-              </div>
-          </div>
-        </div>
-
-        {/* FOOTER */}
-        <footer className="mt-24 pt-12 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] font-black uppercase tracking-[0.4em] text-white/20">
-            <div className="flex gap-12">
-              <span>Internal Security: 608-A</span>
-              <span>Audit Grade: Gold</span>
+          {/* SIDE STATUS COLUMN */}
+          <aside className="space-y-4">
+            <div className="bg-black text-[#F97316] border border-black/40 p-4 md:p-5">
+              <p className="text-[10px] font-black tracking-[0.4em] uppercase text-[#F97316]/70 mb-2">
+                SYSTEM STATUS
+              </p>
+              <p className="text-2xl font-black uppercase leading-tight">EPA AIM ACT 2026</p>
+              <p className="text-xs font-bold uppercase tracking-[0.25em] mt-2 text-[#F97316]/80">
+                40 CFR PART 84 • TRUE608 INTEL
+              </p>
             </div>
-            <a href="mailto:support@true608.com" className="text-blue-600 hover:text-white transition-colors underline decoration-2 underline-offset-8">support@true608.com</a>
-          </div>
-        </footer>
+            <div className="bg-black text-[#F97316] border border-black/40 p-4 md:p-5">
+              <p className="text-[10px] font-black tracking-[0.4em] uppercase text-[#F97316]/70 mb-2">
+                VAULT NOTE
+              </p>
+              <p className="text-xs font-bold uppercase leading-relaxed text-[#F97316]/85">
+                Every logged pound is timestamped and GPS-locked. Treat this view as your last line of defense
+                before an EPA audit.
+              </p>
+            </div>
+          </aside>
+        </div>
       </main>
     </div>
   );

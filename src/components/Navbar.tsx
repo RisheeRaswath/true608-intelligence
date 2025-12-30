@@ -61,15 +61,26 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
-            <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground px-2 sm:px-3 text-xs sm:text-sm">
-              <a href="./app/index.html">
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-muted-foreground hover:text-foreground px-2 sm:px-3 text-xs sm:text-sm"
+            >
+              {/* Hard-link into the orange app realm */}
+              <a href="/#/app">
                 <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 Login
               </a>
             </Button>
 
-            <Button size="sm" asChild className="bg-primary hover:bg-primary/90 px-2 sm:px-4 text-xs sm:text-sm font-bold">
-              <a href="./app/index.html">
+            <Button
+              size="sm"
+              asChild
+              className="bg-primary hover:bg-primary/90 px-2 sm:px-4 text-xs sm:text-sm font-bold"
+            >
+              {/* Welded gateway: ensure Join routes to /#/app */}
+              <a href="/#/app">
                 <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 <span className="hidden xs:inline">Get Protected</span>
                 <span className="xs:hidden">Join</span>
